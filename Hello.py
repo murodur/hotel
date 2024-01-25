@@ -1,7 +1,6 @@
 import streamlit as st
-
+from commands import *
 from form import RoomForm
-
 
 st.set_page_config(
     page_title="Hotel Management System",
@@ -14,29 +13,26 @@ st.set_page_config(
 st.title("Welcome to Hotel Management System! 👋")
 
 if __name__ == "__main__":
-    rooms = 11
-    user = "root"
-    passwd = "root"
-    logged = False
 
-    # with st.form("auth", clear_on_submit=True):
-    #     username = st.text_input("user")
-    #     password = st.text_input("password")
-    #     if st.form_submit_button("Log in"):
-    #         if username == user and password == passwd:
-    #             st.success("Success")
-    #             logged = True
-    #         else:
-    #             st.error("Check Username and Password")
+    logged = False
 
     username = st.text_input("user")
     password = st.text_input("password")
-    if username == user and password == passwd:
-        st.success("Success")
-        logged = True
-    else:
-        st.error("Check Username and Password")
+
+    try:
+        info = sign_in(username)
+
+        if decryption(info[0]["password"]) == password:
+            st.success("Success")
+            logged = True
+        else:
+            st.error("Check Username and Password")
+    except:
+        pass
 
     if logged:
-        for i in range(rooms):
-            RoomForm(i).render_form()
+        rooms = get_rooms()
+        print(rooms)
+        for room in rooms:
+            RoomForm(room_id=room['room_number'], room_price=room['room_price'], room_status=room['room_status'],
+                     room_guests=room['room_guests'], room_type=room['room_type']).render_form()
