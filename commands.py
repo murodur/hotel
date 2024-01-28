@@ -1,5 +1,4 @@
 import pymysql
-from config import host, port, user, password, db_name
 from encryption import encryption, decryption
 import datetime
 import streamlit as st
