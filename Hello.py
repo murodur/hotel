@@ -217,8 +217,7 @@ if __name__ == "__main__":
 
     logged = False
     time.sleep(4)
-    timing = get_time()
-    new_time = timing["NOW()"] + datetime.timedelta(hours=2)
+
 
 
     username = st.text_input("user")
@@ -231,6 +230,8 @@ if __name__ == "__main__":
             st.success("Success")
             logged = True
             check_status()
+            timing = get_time()
+            new_time = timing["NOW()"] + datetime.timedelta(hours=2)
         else:
             st.error("Check Username and Password")
     except:
