@@ -213,7 +213,7 @@ def create_analytics():
 
 
 if __name__ == "__main__":
-    # check_status()
+    check_status()
 
     logged = False
     time.sleep(4)
