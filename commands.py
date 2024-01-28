@@ -3,20 +3,17 @@ from config import host, port, user, password, db_name
 from encryption import encryption, decryption
 import datetime
 
-def connect():
-    connection = pymysql.connect(
-        host=host,
-        port=port,
-        user=user,
-        password=password,
-        database=db_name,
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    return connection
+connection = pymysql.connect(
+    host=host,
+    port=port,
+    user=user,
+    password=password,
+    database=db_name,
+    cursorclass=pymysql.cursors.DictCursor
+)
 
 
 def sign_in(name: str) -> bool:
-    connection = connect()
     with connection.cursor() as cursor:
         command = f"""
                     Select * FROM admins WHERE username = '{name}'
@@ -24,24 +21,20 @@ def sign_in(name: str) -> bool:
         cursor.execute(command)
         profile = cursor.fetchall()
         cursor.close()
-        connection.close()
         return False if len(profile) == 0 else profile
 
 def get_time():
-    connection = connect()
 
     with connection.cursor() as cursor:
         command = """SELECT NOW()"""
         cursor.execute(command)
         time_db = cursor.fetchall()
         cursor.close()
-        connection.close()
 
         return time_db[0]
 
 
 def evict(room_number):
-    connection = connect()
 
     with connection.cursor() as cursor:
         command = f"""UPDATE `rooms` SET `room_status`='Свободно', `registration_id`='0' WHERE `room_number`='{room_number}'"""
@@ -49,11 +42,9 @@ def evict(room_number):
         connection.commit()
         cursor.close()
 
-        connection.close()
 
 
 def check_in(check_in_date, check_out_date, days, room_number, sum, admin, payment, client_name, client_passport, category):
-    connection = connect()
 
     with connection.cursor() as cursor:
         insert_command = """INSERT INTO `registration_book`
@@ -73,12 +64,10 @@ def check_in(check_in_date, check_out_date, days, room_number, sum, admin, payme
         cursor.execute(kassa_command)
         connection.commit()
         cursor.close()
-        connection.close()
 
 
 
 def get_kassa():
-    connection = connect()
 
     with connection.cursor() as cursor:
         command = f"SELECT `amount` FROM `kassa`"
@@ -87,13 +76,11 @@ def get_kassa():
         data = cursor.fetchall()
 
         cursor.close()
-        connection.close()
 
         return data
 
 
 def add_to_kassa(username, amount, category, comment):
-    connection = connect()
 
     with connection.cursor() as cursor:
         timing = get_time()["NOW()"] + datetime.timedelta(hours=2)
@@ -103,10 +90,8 @@ def add_to_kassa(username, amount, category, comment):
         cursor.execute(command)
         connection.commit()
         cursor.close()
-        connection.close()
 
 def get_kassa_table():
-    connection = connect()
 
     with connection.cursor() as cursor:
         command = f"""SELECT *
@@ -116,11 +101,9 @@ def get_kassa_table():
         data = cursor.fetchall()
 
         cursor.close()
-        connection.close()
 
         return data
 def get_admin_level(username):
-    connection = connect()
 
     with connection.cursor() as cursor:
         command = f"SELECT `level` FROM `admins` WHERE `username`='{username}'"
@@ -129,37 +112,31 @@ def get_admin_level(username):
         level = cursor.fetchall()
 
         cursor.close()
-        connection.close()
 
         return level
 
 
 def get_checkout_data(reg_id):
-    connection = connect()
 
     with connection.cursor() as cursor:
         command = "SELECT * FROM `registration_book` WHERE `id`=%s"
         cursor.execute(command, (reg_id,))
         data = cursor.fetchone()
         cursor.close()
-        connection.close()
 
         return data
 
 
 def get_history():
-    connection = connect()
 
     with connection.cursor() as cursor:
         command = "SELECT * FROM `registration_book`"
         cursor.execute(command)
         data = cursor.fetchall()
         cursor.close()
-        connection.close()
 
         return data
 def get_rooms():
-    connection = connect()
 
     with connection.cursor() as cursor:
         command = f"""
@@ -168,12 +145,10 @@ def get_rooms():
         cursor.execute(command)
         rooms = cursor.fetchall()
         cursor.close()
-        connection.close()
 
         return rooms
 
 def check_status():
-    connection = connect()
 
     with connection.cursor() as cursor:
         command = "SELECT registration_id FROM rooms"
@@ -190,13 +165,10 @@ def check_status():
                     cursor.execute(update_command)
                 connection.commit()
                 cursor.close()
-        connection.close()
 
 
 
 def get_transactions(days):
-    connection = connect()
-
     with connection.cursor() as cursor:
         income_command = f"""SELECT `amount`
                              FROM kassa
@@ -217,25 +189,20 @@ def get_transactions(days):
         externals = cursor.fetchall()
 
         cursor.close()
-        connection.close()
 
         return incomes, expenses, externals
 def get_admins():
-    connection = connect()
-
     with connection.cursor() as cursor:
         command = f"""SELECT `username`
                       FROM admins"""
         cursor.execute(command)
         data = cursor.fetchall()
         cursor.close()
-        connection.close()
 
         return data
 
 
 def get_admin_data(username):
-    connection = connect()
 
     with connection.cursor() as cursor:
         if username != "Все":
@@ -247,13 +214,11 @@ def get_admin_data(username):
         cursor.execute(command)
         data = cursor.fetchall()
         cursor.close()
-        connection.close()
 
         return data
 
 
 def get_expenses(days):
-    connection = connect()
 
     with connection.cursor() as cursor:
         command = f"""SELECT `category`, `amount`
@@ -264,13 +229,11 @@ def get_expenses(days):
 
 
         cursor.close()
-        connection.close()
 
         return expenses
 
 
 def get_visitor(days):
-    connection = connect()
 
     with connection.cursor() as cursor:
         command = f"""SELECT DATE(check_in_date) AS visit_date, COUNT(*) AS visits_count
@@ -284,6 +247,5 @@ def get_visitor(days):
         visit_count_by_day = cursor.fetchall()
 
         cursor.close()
-        connection.close()
 
         return visit_count_by_day
