@@ -222,6 +222,8 @@ if __name__ == "__main__":
 
     username = st.text_input("user")
     password = st.text_input("password", type='password')
+    timing = get_time()
+    new_time = timing["NOW()"] + datetime.timedelta(hours=2)
 
     try:
         info = sign_in(username)
@@ -237,8 +239,6 @@ if __name__ == "__main__":
         pass
 
     if logged:
-        timing = get_time()
-        new_time = timing["NOW()"] + datetime.timedelta(hours=2)
         if get_admin_level(username)[0]['level'] == '3':
             tab1, tab2, tab3, tab4 = st.tabs(["Регистрация", "Касса", "История Регистрации", "Аналитика"])
             with tab1:
