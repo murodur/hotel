@@ -230,14 +230,15 @@ if __name__ == "__main__":
             st.success("Success")
             logged = True
             check_status()
-            timing = get_time()
-            new_time = timing["NOW()"] + datetime.timedelta(hours=2)
+
         else:
             st.error("Check Username and Password")
     except:
         pass
 
     if logged:
+        timing = get_time()
+        new_time = timing["NOW()"] + datetime.timedelta(hours=2)
         if get_admin_level(username)[0]['level'] == '3':
             tab1, tab2, tab3, tab4 = st.tabs(["Регистрация", "Касса", "История Регистрации", "Аналитика"])
             with tab1:
