@@ -213,7 +213,7 @@ def create_analytics():
 
 
 if __name__ == "__main__":
-    check_status()
+
 
     logged = False
     time.sleep(4)
@@ -230,6 +230,7 @@ if __name__ == "__main__":
         if decryption(info[0]["password"]) == password:
             st.success("Success")
             logged = True
+            check_status()
         else:
             st.error("Check Username and Password")
     except:
