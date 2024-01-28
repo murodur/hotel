@@ -2,13 +2,14 @@ import pymysql
 from config import host, port, user, password, db_name
 from encryption import encryption, decryption
 import datetime
+import streamlit as st
 
 connection = pymysql.connect(
-    host=host,
-    port=port,
-    user=user,
-    password=password,
-    database=db_name,
+    host=st.secrets["host"],
+    port=st.secrets["port"],
+    user=st.secrets["user"],
+    password=st.secrets["password"],
+    database=st.secrets["db"],
     cursorclass=pymysql.cursors.DictCursor
 )
 
